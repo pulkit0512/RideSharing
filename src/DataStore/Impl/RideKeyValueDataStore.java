@@ -43,9 +43,7 @@ public class RideKeyValueDataStore implements RideDataStore {
             if(vehicleKeys != null) {
                 List<DriverRideDetails> driverRideDetails = new ArrayList<>();
                 for (String key : vehicleKeys) {
-                    DriverRideDetails rideDetails = rideInfoDataStore.get(key);
-                    if (rideDetails != null)
-                        driverRideDetails.add(rideDetails);
+                    driverRideDetails.add(rideInfoDataStore.get(key));
                 }
                 return driverRideDetails;
             }
@@ -58,8 +56,11 @@ public class RideKeyValueDataStore implements RideDataStore {
         Map<String, Set<String>> destinationMap = rideDataStore.get(driverRideDetails.getOrigin());
         if(destinationMap != null) {
             String vehicleKey = driverRideDetails.getVehicleName()+"_"+driverRideDetails.getVehicleNumber();
-            destinationMap.remove(vehicleKey);
-            rideInfoDataStore.remove(vehicleKey);
+            Set<String> vehicleKeys = destinationMap.get(driverRideDetails.getDestination());
+            if(vehicleKeys != null) {
+                vehicleKeys.remove(vehicleKey);
+                rideInfoDataStore.remove(vehicleKey);
+            }
         }
     }
 }
